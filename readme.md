@@ -12,7 +12,7 @@ npm install taff
 
 ## Usage
 
-Consider standard template for writing an Azure Functions HTTP Trigger in TypeScript:
+Consider the standard template for writing an Azure Functions HTTP Trigger in TypeScript:
 
 ```typescript
 const httpTrigger: AzureFunction = async function (context: Context, req: HttpRequest): Promise<void> {
