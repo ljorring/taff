@@ -1,6 +1,6 @@
 import { Context } from "@azure/functions";
 
-import { RequestHandler, RequestParser,Middleware, HttpStatusCode, RequestHandlerResult, RequestEngineFactory, RequestEngine, RequestHandlerResponse } from "./index";
+import { RequestHandler, RequestParser,Middleware, HttpStatusCode, RequestHandlerResult, RequestEngineFactory, RequestEngine, RequestHandlerResponse } from "./index.d";
 
 let constructEngine: RequestEngineFactory = (middlewaresArg) => {
     let middlewarePipeline: Middleware[] = []
