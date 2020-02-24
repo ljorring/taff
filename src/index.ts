@@ -1,4 +1,4 @@
-import { Context } from "@azure/functions";
+import { Context } from "@azure/functions"
 
 export let constructEngine: RequestEngineFactory = (middlewaresArg) => {
     let middlewarePipeline: Middleware[] = []
