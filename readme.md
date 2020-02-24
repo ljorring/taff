@@ -1,6 +1,6 @@
 # Tiny Azure Functions Framework
 
-Tiny Azure Functions Framework (or 'taff') is a small framework aimed at easing the development of HTTP Triggers in Azure Functions running on Node.js.
+Tiny Azure Functions Framework (or 'taff') is a small framework aimed at improving the development experience of HTTP Triggers in Azure Functions running on Node.js.
 
 ## Installation
 
@@ -39,15 +39,13 @@ export default httpTrigger;
 Using taff it can be written as:
 
 ```typescript
-/////// Construct engine with optional middleware //////////
+/////// Optional middleware //////////
 
 const loggingMiddleware: Middleware = async (context, next) => {
     context.log('HTTP trigger function processed a request.')
 
     return await next()
 }
-
-let requestEngine = constructEngine([loggingMiddleware])
 
 /////// Handler logic ////////
 
@@ -65,7 +63,12 @@ let sayHi: RequestHandler<string> = async (context, name) => ({
     body: "Hello " + name
 })
 
-const httpTrigger: AzureFunction = context => requestEngine(context, parseName, sayHi)
+/////// HTTP Trigger ////////
+
+let requestEngine = constructEngine([loggingMiddleware])
+
+const httpTrigger: AzureFunction = context =>
+    requestEngine(context, parseName, sayHi)
 
 export default httpTrigger;
 ```
