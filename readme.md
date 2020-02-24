@@ -7,7 +7,7 @@ Tiny Azure Functions Framework (or 'taff') is a small framework aimed at improvi
 Use the package manager [npm](https://www.npmjs.com/) to install taff.
 
 ```bash
-npm install tiny-azure-functions-framework
+npm install taff
 ```
 
 ## Usage

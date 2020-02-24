@@ -1,6 +1,6 @@
 {
   "name": "taff",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "Tiny Azure Functions Framework",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
