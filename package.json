@@ -1,15 +1,13 @@
 {
   "name": "tiny-azure-functions-framework",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Tiny Azure Functions Framework",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
     "clean-dist": "del-cli --force dist",
-    "build-dist": "parcel build src/index.ts",
+    "build-dist": "tsc",
     "build": "run-s clean-dist build-dist",
-    "publish-dist": "npm publish",
-    "publish": "run-s build publish-dist",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -31,7 +29,6 @@
     "@azure/functions": "^1.2.0",
     "del-cli": "^3.0.0",
     "npm-run-all": "^4.1.5",
-    "parcel-bundler": "^1.12.4",
     "typescript": "^3.8.2"
   },
   "dependencies": {}
