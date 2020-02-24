@@ -1,6 +1,6 @@
 import { Context } from "@azure/functions";
 
-import { RequestHandler, RequestParser,Middleware, HttpStatusCode, RequestHandlerResult, RequestEngineFactory, RequestEngine, RequestHandlerResponse } from "./AzureFramework";
+import { RequestHandler, RequestParser,Middleware, HttpStatusCode, RequestHandlerResult, RequestEngineFactory, RequestEngine, RequestHandlerResponse } from "./index";
 
 let constructEngine: RequestEngineFactory = (middlewaresArg) => {
     let middlewarePipeline: Middleware[] = []
@@ -52,6 +52,7 @@ let constructEngine: RequestEngineFactory = (middlewaresArg) => {
             }
         }
 
+        // @ts-ignore: Not sure if we can safely ignore this warning
         return result
     }
 
