@@ -1,9 +1,9 @@
 {
   "name": "taff",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "Tiny Azure Functions Framework",
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "clean-dist": "del-cli --force dist",
     "build-dist": "tsc",
@@ -26,10 +26,11 @@
   },
   "homepage": "https://github.com/ljorring/taff#readme",
   "devDependencies": {
-    "@azure/functions": "^1.2.0",
     "del-cli": "^3.0.0",
     "npm-run-all": "^4.1.5",
     "typescript": "^3.8.2"
   },
-  "dependencies": {}
+  "dependencies": {
+    "@azure/functions": "^1.2.0"
+  }
 }
