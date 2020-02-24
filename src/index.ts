@@ -102,7 +102,7 @@ export let fail = (errorMessage: string): { success: false, errorMessage: string
 /**
  * Builds a request engine from supplied middleware.
  */
-export interface RequestEngineFactory {
+export declare interface RequestEngineFactory {
     (middlewares?: Middleware[]): RequestEngine
 }
 
