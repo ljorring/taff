@@ -1,9 +1,9 @@
 {
   "name": "taff",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Tiny Azure Functions Framework",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "scripts": {
     "clean-dist": "del-cli --force dist",
     "build-dist": "tsc",
