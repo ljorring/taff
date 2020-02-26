@@ -2,6 +2,10 @@
 
 Tiny Azure Functions Framework (or 'taff') is a small framework aimed at improving the development experience of HTTP Triggers in Azure Functions running on Node.js.
 
+## Important notice
+This is a very early pre-alpha version. Expect bugs and missing functionality. Current urgent issues:
+- [Missing type declarations](https://github.com/ljorring/taff/issues/1)
+
 ## Installation
 
 Use the package manager [npm](https://www.npmjs.com/) to install taff.
