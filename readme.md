@@ -43,19 +43,21 @@ const httpTrigger: AzureFunction = async function (context: Context, req: HttpRe
 export default httpTrigger;
 ```
 
-Let's refactor this into taff components.
+Let's refactor this using taff.
+
+1. Make a **middleware** component for the general request logging.
 
 ```typescript
-/////// Middleware //////////
-
 let loggingMiddleware: Middleware = async (context, next) => {
     context.log('HTTP trigger function processed a request.')
 
     return await next()
 }
+```
 
-/////// Parser ////////
+2. Make a **parser** to take care of parsing of the name.
 
+```typescript
 let parseName: RequestParser<string> = context => {
     const name = (context.req.query.name || (context.req.body && context.req.body.name))
 
@@ -64,16 +66,20 @@ let parseName: RequestParser<string> = context => {
     else
         return fail("Please pass a name on the query string or in the request body")
 }
+```
 
-/////// Handler ////////
+3. Declare the **handler**, which for this example is trivial, since there is no business logic.
 
+```typescript
 let sayHi: RequestHandler<string> = async (context, name) => ({
     statusCode: HttpStatusCode.OK,
     body: "Hello " + name
 })
+```
 
-/////// HTTP Trigger ////////
+4. Finally tell the HTTP trigger to make use of taff and the above components
 
+```typescript
 let requestEngine = constructEngine([loggingMiddleware])
 
 const httpTrigger: AzureFunction = context =>
