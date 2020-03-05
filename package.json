@@ -1,14 +1,15 @@
 {
   "name": "taff",
-  "version": "0.1.13",
+  "version": "0.1.18",
   "description": "Tiny Azure Functions Framework",
   "main": "dist/index.js",
-  "typings": "dist/index",
+  "types": "dist/index.d.ts",
   "scripts": {
     "clean-dist": "del-cli --force dist",
     "build-dist": "tsc",
     "build": "run-s clean-dist build-dist",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepublish": "tsc"
   },
   "repository": {
     "type": "git",
