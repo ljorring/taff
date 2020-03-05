@@ -1,12 +1,16 @@
 import { Context } from "@azure/functions"
 
-export let constructEngine: RequestEngineFactory = (middlewaresArg) => {
-    let middlewarePipeline: Middleware[] = []
+/**
+ * Constructs a request engine with the supplied middleware pipeline
+ * @param middlewarePipeline An array of middleware, which will be executed for all requests
+ */
+export let constructEngine: RequestEngineFactory = middlewarePipeline => {
+    let _middlewarePipeline: Middleware[] = []
     
-    if (middlewaresArg)
-        middlewarePipeline = middlewaresArg
+    if (middlewarePipeline)
+        _middlewarePipeline = middlewarePipeline
 
-    let handleAzureRequest: RequestEngine = async (
+    let requestEngine: RequestEngine = async (
         context: Context,
         handlerOrParser: RequestHandler<any> | RequestParser<any>,
         potentialHandler?: RequestHandler<any>
@@ -28,8 +32,7 @@ export let constructEngine: RequestEngineFactory = (middlewaresArg) => {
         let { handler, parser } = resolveArguments(handlerOrParser, potentialHandler)
 
         // Start execution
-        // @ts-ignore: Typescript is unable to 
-        let result = await runRequest(context, middlewarePipeline, handler, parser)
+        let result = await runRequest(context, _middlewarePipeline, handler, parser)
 
         // If the handler returns undefined, we rely on the user having tweaked
         // the response object
@@ -45,16 +48,13 @@ export let constructEngine: RequestEngineFactory = (middlewaresArg) => {
         else if (typeof result == "object") {
             let response = result as RequestHandlerResponse
             context.res = {
-                status: response.statusCode,
+                status: response.statusCode ?? HttpStatusCode.OK,
                 body: response.body
             }
         }
-
-        // @ts-ignore: Not sure if we can safely ignore this warning
-        return result
     }
 
-    return handleAzureRequest
+    return requestEngine
 }
 
 let runRequest = async (
@@ -103,16 +103,15 @@ export let fail = (errorMessage: string): { success: false, errorMessage: string
  * Builds a request engine from supplied middleware.
  */
 export interface RequestEngineFactory {
-    (middlewares?: Middleware[]): RequestEngine
+    (middlewarePipeline?: Middleware[]): RequestEngine
 }
 
 /**
  * Executes an Azure function request.
- * Supply a request parser to parse the result. Returns HTTP status 400, if parsing fails.
  */
 export interface RequestEngine {
-    (context: Context, handler: RequestHandler<any>): Promise<RequestHandlerResult>
-    <TRequest>(context: Context, requestParser: RequestParser<TRequest>, handler: RequestHandler<TRequest>): Promise<RequestHandlerResult>
+    (context: Context, handler: RequestHandler<any>): Promise<void>
+    <TRequest>(context: Context, requestParser: RequestParser<TRequest>, handler: RequestHandler<TRequest>): Promise<void>
 }
 
 //#endregion
@@ -124,7 +123,7 @@ export type RequestHandler<TRequest> = (context: Context, request?: TRequest) =>
 export type RequestHandlerResult = RequestHandlerResponse | HttpStatusCode | void
 
 export type RequestHandlerResponse = {
-    statusCode: HttpStatusCode,
+    statusCode?: HttpStatusCode,
     body: any
 }
 

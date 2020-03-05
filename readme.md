@@ -1,14 +1,17 @@
 # Tiny Azure Functions Framework
 
-Tiny Azure Functions Framework (or 'taff') is a small framework aimed at improving the development experience of HTTP Triggers in Azure Functions running on Node.js.
+Tiny Azure Functions Framework (or **taff**) is a small framework aimed at improving the development experience of **HTTP Triggers** for **Azure Functions** running on **Node.js**. It does so by allowing you to split the request handling into 3 components:
+
+- (Optional) **Middleware**
+- (Optional) Request **Parser**
+- Request **Handler**
 
 ## Important notice
-This is a very early pre-alpha version. Expect bugs and missing functionality. Current urgent issues:
-- [Missing type declarations](https://github.com/ljorring/taff/issues/1)
+This project is in alpha. Expect bugs and missing functionality. Feel free to suggest improvements.
 
 ## Installation
 
-Use the package manager [npm](https://www.npmjs.com/) to install taff.
+Use [npm](https://www.npmjs.com/) to install taff.
 
 ```bash
 npm install taff
@@ -40,20 +43,20 @@ const httpTrigger: AzureFunction = async function (context: Context, req: HttpRe
 export default httpTrigger;
 ```
 
-Using taff it can be written as:
+Let's refactor this into taff components.
 
 ```typescript
-/////// Optional middleware //////////
+/////// Middleware //////////
 
-const loggingMiddleware: Middleware = async (context, next) => {
+let loggingMiddleware: Middleware = async (context, next) => {
     context.log('HTTP trigger function processed a request.')
 
     return await next()
 }
 
-/////// Handler logic ////////
+/////// Parser ////////
 
-const parseName: RequestParser<string> = context => {
+let parseName: RequestParser<string> = context => {
     const name = (context.req.query.name || (context.req.body && context.req.body.name))
 
     if (name)
@@ -61,6 +64,8 @@ const parseName: RequestParser<string> = context => {
     else
         return fail("Please pass a name on the query string or in the request body")
 }
+
+/////// Handler ////////
 
 let sayHi: RequestHandler<string> = async (context, name) => ({
     statusCode: HttpStatusCode.OK,
