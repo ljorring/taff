@@ -9,11 +9,16 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.constructEngine = (middlewaresArg) => {
-    let middlewarePipeline = [];
-    if (middlewaresArg)
-        middlewarePipeline = middlewaresArg;
-    let handleAzureRequest = (context, handlerOrParser, potentialHandler) => __awaiter(void 0, void 0, void 0, function* () {
+/**
+ * Constructs a request engine with the supplied middleware pipeline
+ * @param middlewarePipeline An array of middleware, which will be executed for all requests
+ */
+exports.constructEngine = middlewarePipeline => {
+    let _middlewarePipeline = [];
+    if (middlewarePipeline)
+        _middlewarePipeline = middlewarePipeline;
+    let requestEngine = (context, handlerOrParser, potentialHandler) => __awaiter(void 0, void 0, void 0, function* () {
+        var _a;
         let resolveArguments = (handlerOrParser, potentialHandler) => {
             if (potentialHandler)
                 return {
@@ -28,8 +33,7 @@ exports.constructEngine = (middlewaresArg) => {
         };
         let { handler, parser } = resolveArguments(handlerOrParser, potentialHandler);
         // Start execution
-        // @ts-ignore: Typescript is unable to 
-        let result = yield runRequest(context, middlewarePipeline, handler, parser);
+        let result = yield runRequest(context, _middlewarePipeline, handler, parser);
         // If the handler returns undefined, we rely on the user having tweaked
         // the response object
         if (typeof result == "undefined") {
@@ -44,14 +48,12 @@ exports.constructEngine = (middlewaresArg) => {
         else if (typeof result == "object") {
             let response = result;
             context.res = {
-                status: response.statusCode,
+                status: (_a = response.statusCode, (_a !== null && _a !== void 0 ? _a : 200 /* OK */)),
                 body: response.body
             };
         }
-        // @ts-ignore: Not sure if we can safely ignore this warning
-        return result;
     });
-    return handleAzureRequest;
+    return requestEngine;
 };
 let runRequest = (context, middlewarePipeline, handler, parser) => __awaiter(void 0, void 0, void 0, function* () {
     if (middlewarePipeline.length > 0) {

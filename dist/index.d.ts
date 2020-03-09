@@ -1,4 +1,8 @@
 import { Context } from "@azure/functions";
+/**
+ * Constructs a request engine with the supplied middleware pipeline
+ * @param middlewarePipeline An array of middleware, which will be executed for all requests
+ */
 export declare let constructEngine: RequestEngineFactory;
 export declare let success: <T>(result: T) => {
     success: true;
@@ -12,20 +16,19 @@ export declare let fail: (errorMessage: string) => {
  * Builds a request engine from supplied middleware.
  */
 export interface RequestEngineFactory {
-    (middlewares?: Middleware[]): RequestEngine;
+    (middlewarePipeline?: Middleware[]): RequestEngine;
 }
 /**
  * Executes an Azure function request.
- * Supply a request parser to parse the result. Returns HTTP status 400, if parsing fails.
  */
 export interface RequestEngine {
-    (context: Context, handler: RequestHandler<any>): Promise<RequestHandlerResult>;
-    <TRequest>(context: Context, requestParser: RequestParser<TRequest>, handler: RequestHandler<TRequest>): Promise<RequestHandlerResult>;
+    (context: Context, handler: RequestHandler<any>): Promise<void>;
+    <TRequest>(context: Context, requestParser: RequestParser<TRequest>, handler: RequestHandler<TRequest>): Promise<void>;
 }
 export declare type RequestHandler<TRequest> = (context: Context, request?: TRequest) => Promise<RequestHandlerResult>;
 export declare type RequestHandlerResult = RequestHandlerResponse | HttpStatusCode | void;
 export declare type RequestHandlerResponse = {
-    statusCode: HttpStatusCode;
+    statusCode?: HttpStatusCode;
     body: any;
 };
 export declare const enum HttpStatusCode {
