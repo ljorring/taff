@@ -275,5 +275,11 @@ type RequestHandlerResult = RequestHandlerResponse | HttpStatusCode | void
 ## Limitations
 taff does not handle routing. Use the built-in routing for Azure Functions and call the taff request engine explicitly for all HTTP triggers.
 
+### Improvement suggestions
+- Request handler: Change return type to a rich object and use helper factories for convencience.
+- Improve terminology of components
+- Introduce 
+- Allow middleware components to expose enrichments of request context using types (if possible)
+
 ## License
-None
+MIT
