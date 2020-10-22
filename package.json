@@ -1,39 +1,58 @@
 {
   "name": "taff",
+  "author": "mal",
   "version": "0.2.1",
-  "description": "Tiny Azure Functions Framework",
+  "license": "MIT",
   "main": "dist/index.js",
-  "types": "dist/index.d.ts",
-  "scripts": {
-    "clean-dist": "del-cli --force dist",
-    "build-dist": "tsc",
-    "build": "run-s clean-dist build-dist",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "prepublish": "tsc"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/ljorring/taff.git"
-  },
-  "keywords": [
-    "azure",
-    "functions",
-    "framework",
-    "middleware",
-    "taff"
+  "typings": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "src"
   ],
-  "author": "ljorring",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/ljorring/taff/issues"
+  "engines": {
+    "node": ">=10"
   },
-  "homepage": "https://github.com/ljorring/taff#readme",
+  "scripts": {
+    "start": "tsdx watch",
+    "build": "tsdx build",
+    "test": "tsdx test",
+    "lint": "tsdx lint",
+    "prepare": "tsdx build",
+    "size": "size-limit",
+    "analyze": "size-limit --why"
+  },
+  "peerDependencies": {},
+  "husky": {
+    "hooks": {
+      "pre-commit": "tsdx test"
+    }
+  },
+  "prettier": {
+    "printWidth": 80,
+    "semi": false,
+    "singleQuote": true,
+    "trailingComma": "none"
+  },
+  "module": "dist/taff.esm.js",
+  "size-limit": [
+    {
+      "path": "dist/taff.cjs.production.min.js",
+      "limit": "10 KB"
+    },
+    {
+      "path": "dist/taff.esm.js",
+      "limit": "10 KB"
+    }
+  ],
   "devDependencies": {
-    "del-cli": "^3.0.0",
-    "npm-run-all": "^4.1.5",
-    "typescript": "^3.8.2"
+    "@size-limit/preset-small-lib": "^4.6.2",
+    "husky": "^4.3.0",
+    "size-limit": "^4.6.2",
+    "tsdx": "^0.14.1",
+    "tslib": "^2.0.3",
+    "typescript": "^4.0.3"
   },
   "dependencies": {
-    "@azure/functions": "^1.2.0"
+    "@azure/functions": "^1.2.2"
   }
 }
