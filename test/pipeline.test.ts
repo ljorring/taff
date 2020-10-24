@@ -1,10 +1,11 @@
 import { Context } from '@azure/functions';
-import { constructEngine, HttpStatusCode, RequestHandler } from '../src/index'
+
+import { HttpStatusCode, makeRequestPipeline, RequestHandler } from '../src/index'
 
 describe('pipeline', () => {
   it('can be constructed', async () => {
     // Arrange
-    let pipeline = constructEngine([]),
+    let pipeline = makeRequestPipeline([]),
         handler: RequestHandler<any> = () => Promise.resolve(HttpStatusCode.OK)
 
     // @ts-ignore
