@@ -1,7 +1,7 @@
 {
   "name": "taff",
   "author": "mal",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -13,13 +13,13 @@
     "node": ">=10"
   },
   "scripts": {
-    "start": "tsdx watch",
-    "build": "tsdx build",
-    "test": "del-cli \"node_modules/.cache/rollup-plugin-typescript2\" && tsdx test",
+    "build": "npm run clearRollupCache && tsdx build",
+    "test": "npm run clearRollupCache  && tsdx test",
     "lint": "tsdx lint",
     "prepare": "tsdx build",
     "size": "size-limit",
-    "analyze": "size-limit --why"
+    "analyze": "size-limit --why",
+    "clearRollupCache": "del-cli \"node_modules/.cache/rollup-plugin-typescript2\""
   },
   "peerDependencies": {},
   "husky": {
