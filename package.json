@@ -22,11 +22,6 @@
     "clearRollupCache": "del-cli \"node_modules/.cache/rollup-plugin-typescript2\""
   },
   "peerDependencies": {},
-  "husky": {
-    "hooks": {
-      "pre-commit": "tsdx test"
-    }
-  },
   "prettier": {
     "printWidth": 80,
     "semi": false,
