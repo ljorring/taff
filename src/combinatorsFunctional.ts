@@ -7,15 +7,17 @@ declare interface IMiddleware<NextInput> {
 }
 
 declare interface Middleware<NextInput> extends IMiddleware<NextInput> {
-    bind: <NextInput2>(m2Factory: (input: NextInput) => IMiddleware<NextInput2>)
+    bind: <NextInput2>(m2Factory: (input: NextInput) => IMiddleware<NextInput2>) => IMiddleware<NextInput2>
+    then: <NextInput2>(m2: IMiddleware<NextInput2>) => IMiddleware<[NextInput, NextInput2]>
 }
 
 type MiddlewareFactory<Input, NextInput> = (a: Input) => IMiddleware<NextInput>
 
 let lift = <NextInput>(m: IMiddleware<NextInput>) => {
-    let result: Middleware<NextInput> = m
+    let result = <Middleware<NextInput>> m
 
     result.bind = <NextInput2>(m2Factory: (a: NextInput) => IMiddleware<NextInput2>) => bind(m, m2Factory)
+    result.then = <NextInput2>(m2: IMiddleware<NextInput2>) => combine(m, m2)
 
     return result
 }
