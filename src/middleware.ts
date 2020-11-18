@@ -1,19 +1,17 @@
-import { Context } from "@azure/functions"
+export type Action<T> = (input: T) => void
 
-export type ContextAction = (context: Context) => Promise<void>
-
-export interface IMiddleware<NextInput> {
-    (next: (input: NextInput) => Promise<ContextAction>): Promise<ContextAction>
+export interface IMiddleware<NextInput, Context> {
+    (context: Context, next: (input: NextInput) => Promise<Action<Context>>): Promise<Action<Context>>
 }
 
-export interface Middleware<NextInput> extends IMiddleware<NextInput> {
-    bind: <NextInput2>(m2Factory: (input: NextInput) => IMiddleware<NextInput2>) => IMiddleware<NextInput2>
-    then: <NextInput2>(m2: IMiddleware<NextInput2>)                              => IMiddleware<[NextInput, NextInput2]>
-    map:  <NextInput2>(f: (input: NextInput) => NextInput2)                      => IMiddleware<NextInput2>
+export interface Middleware<NextInput, Context> extends IMiddleware<NextInput, Context> {
+    bind: <NextInput2>(m2Factory: (input: NextInput) => IMiddleware<NextInput2, Context>) => IMiddleware<NextInput2, Context>
+    then: <NextInput2>(m2: IMiddleware<NextInput2, Context>)                              => IMiddleware<[NextInput, NextInput2], Context>
+    map:  <NextInput2>(f: (input: NextInput) => NextInput2)                               => IMiddleware<NextInput2, Context>
 }
 
-export let lift = <NextInput>(middleware: IMiddleware<NextInput>) => {
-    let result = <Middleware<NextInput>> middleware
+export let lift = <NextInput, Context>(middleware: IMiddleware<NextInput, Context>) => {
+    let result = <Middleware<NextInput, Context>> middleware
 
     result.bind = mF => lift(bind(   middleware, mF))
     result.then = m =>  lift(combine(middleware, m))
@@ -22,20 +20,20 @@ export let lift = <NextInput>(middleware: IMiddleware<NextInput>) => {
     return result
 }
 
-let combine = <NextInput1, NextInput2>(
-        m1: IMiddleware<NextInput1>,
-        m2: IMiddleware<NextInput2>
-    ): IMiddleware<[NextInput1, NextInput2]> =>
-        next => m1(input1 => m2(input2 => next([input1,input2])))
+let combine = <NextInput1, NextInput2, Context>(
+        m1: IMiddleware<NextInput1, Context>,
+        m2: IMiddleware<NextInput2, Context>
+    ): IMiddleware<[NextInput1, NextInput2], Context> =>
+        (context, next) => m1(context, input1 => m2(context, input2 => next([input1,input2])))
 
-let bind = <NextInput1, NextInput2>(
-        m1: IMiddleware<NextInput1>,
-        m2Factory: (a: NextInput1) => IMiddleware<NextInput2>
-    ): IMiddleware<NextInput2> =>
-        next => m1(input2 => m2Factory(input2)(next))
+let bind = <NextInput1, NextInput2, Context>(
+        m1: IMiddleware<NextInput1, Context>,
+        m2Factory: (a: NextInput1) => IMiddleware<NextInput2, Context>
+    ): IMiddleware<NextInput2, Context> =>
+        (context, next) => m1(context, input2 => m2Factory(input2)(context, next))
 
-let map = <NextInput1, NextInput2>(
-        m: IMiddleware<NextInput1>,
+let map = <NextInput1, NextInput2, Context>(
+        m: IMiddleware<NextInput1, Context>,
         f: (input: NextInput1) => NextInput2
-    ): IMiddleware<NextInput2> =>
-        next => m(input => next(f(input)))
+    ): IMiddleware<NextInput2, Context> =>
+        (context, next) => m(context, input => next(f(input)) )
